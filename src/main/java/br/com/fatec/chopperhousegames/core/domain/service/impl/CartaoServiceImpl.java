@@ -34,7 +34,7 @@ public class CartaoServiceImpl implements CartaoService {
     @Override
     public CartaoCredito salvar(CartaoCredito cartao) {
         cartao.setCliente(clienteService.atualUsuarioLogado());
-        return repository.saveAndFlush(cartao);
+        return repository.save(cartao);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class CartaoServiceImpl implements CartaoService {
     @Override
     public CartaoCredito editar(CartaoCredito cartao) {
         cartao.setCliente(clienteService.atualUsuarioLogado());
-        return repository.saveAndFlush(cartao);
+        return repository.save(cartao);
     }
 }

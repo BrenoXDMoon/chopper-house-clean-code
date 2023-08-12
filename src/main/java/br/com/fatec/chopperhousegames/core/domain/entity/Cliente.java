@@ -28,14 +28,11 @@ public class Cliente extends EntidadeDominio {
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CartaoCredito> cartoes;
 
-    @ManyToOne
     private TipoCliente tipoCliente;
 
     private String telefone;
 
     private String roles;
-
-    private boolean ativo;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Carrinho carrinho;

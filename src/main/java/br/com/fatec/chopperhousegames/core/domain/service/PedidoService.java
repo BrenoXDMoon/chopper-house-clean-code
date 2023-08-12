@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PedidoService {
 
-    Pedido buscarById(Integer id);
+    Pedido buscarById(Long id);
     Pedido salvar(Pedido pedido, BindingResult result);
     List<Pedido> buscarTodos();
     Pedido editar(Pedido pedido);

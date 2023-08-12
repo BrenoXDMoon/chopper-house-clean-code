@@ -4,18 +4,15 @@ import br.com.fatec.chopperhousegames.core.domain.entity.*;
 import br.com.fatec.chopperhousegames.core.repository.*;
 import br.com.fatec.chopperhousegames.core.domain.service.PedidoService;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.ChartDto;
-import br.com.fatec.chopperhousegames.inbound.facade.dto.DataSetDto;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.GraficoDto;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.*;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PedidoServiceImpl implements PedidoService {
@@ -48,7 +45,7 @@ public class PedidoServiceImpl implements PedidoService {
 
 
     @Override
-    public Pedido buscarById(Integer id) {
+    public Pedido buscarById(Long id) {
         return repository.findById(id).get();
     }
 
@@ -89,88 +86,90 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public ChartDto buscarTodosCriadosEntre(Date dataInicial, Date dataFinal, Integer tipoBusca) {
-        if (null == tipoBusca){
-            tipoBusca = 0;
-        }
-
-        List<Pedido> pedidosFiltrados = repository.findAllByDataCriacaoBetweenOrderByDataCriacao(dataInicial, dataFinal);
-
-        Map<LocalDate, List<Pedido>> agrupadoPorData = new HashMap<>();
-
-        LocalDate localDate = null;
-
-        for(Pedido ped : pedidosFiltrados){
-            Date data = new Date(ped.getDataCriacao().getTime());
-            localDate = data.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if(!agrupadoPorData.containsKey(localDate.getDayOfYear())){
-                agrupadoPorData.put(localDate, new ArrayList<>());
-                agrupadoPorData.get(localDate).add(ped);
-            }else {
-                agrupadoPorData.get(localDate).add(ped);
-            }
-        }
-
-        List<HashMap<String, Double>> pedidoValor = new ArrayList<>();
-
-        ChartDto chartDTO = new ChartDto();
-        List<DataSetDto> listaDataSet = new ArrayList<>();
-
-        //filtro de jogo
-        if (tipoBusca.equals(0)) {
-            List<Jogo> jogos = jogoRepository.findAll();
-
-            for (Jogo jogo : jogos) {
-                DataSetDto dataSetDTO = new DataSetDto();
-                List<Double> doubleList = new ArrayList<>();
-                dataSetDTO.setLabel(jogo.getTitulo());
-
-
-                for (List<Pedido> order : agrupadoPorData.values()) {
-                    Integer amount = 0;
-                    for (Pedido orderValueGroup : order) {
-                        for (Item item : orderValueGroup.getItens()) {
-                            if (item.getJogo().equals(jogo))
-                                amount += item.getQuantidade();
-                        }
-                    }
-                    doubleList.add(Double.parseDouble(String.valueOf(amount)));
-                }
-
-                dataSetDTO.setData(doubleList);
-                listaDataSet.add(dataSetDTO);
-            }
-        } else {//filtro de genero de jogo
-            List<Genero> generos = generoRepository.findAll();
-            for (Genero genero : generos) {
-                DataSetDto dataSetDTO = new DataSetDto();
-                List<Double> doubleList = new ArrayList<>();
-                dataSetDTO.setLabel(genero.getNome());
-
-                for (List<Pedido> pedidos : agrupadoPorData.values()) {
-                    Integer amount = 0;
-                    Jogo jogo = null;
-                    for (Pedido orderValueGroup : pedidos) {
-                        for (Item item : orderValueGroup.getItens()) {
-                            if (item.getJogo().getGeneros().contains(genero)) {
-                                amount += item.getQuantidade();
-                            }
-                            jogo = item.getJogo();
-                        }
-                    }
-
-                    if (null != jogo)
-                        doubleList.add(Double.parseDouble(String.valueOf(amount)));
-                }
-
-                dataSetDTO.setData(doubleList);
-                listaDataSet.add(dataSetDTO);
-            }
-        }
-
-        chartDTO.setLabel(agrupadoPorData.keySet().stream().map(lDate -> lDate.toString()).collect(Collectors.toList()));
-        chartDTO.setDatasets(listaDataSet);
-
-        return chartDTO;
+        //TODO: DESCOMENTAR E REFATORAR FUTURAMENTE
+//        if (null == tipoBusca){
+//            tipoBusca = 0;
+//        }
+//
+//        List<Pedido> pedidosFiltrados = repository.findAllByDataCriacaoBetweenOrderByDataCriacao(dataInicial, dataFinal);
+//
+//        Map<LocalDate, List<Pedido>> agrupadoPorData = new HashMap<>();
+//
+//        LocalDate localDate = null;
+//
+//        for(Pedido ped : pedidosFiltrados){
+//            Date data = new Date(ped.getDataCriacao().getTime());
+//            localDate = data.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            if(!agrupadoPorData.containsKey(localDate.getDayOfYear())){
+//                agrupadoPorData.put(localDate, new ArrayList<>());
+//                agrupadoPorData.get(localDate).add(ped);
+//            }else {
+//                agrupadoPorData.get(localDate).add(ped);
+//            }
+//        }
+//
+//        List<HashMap<String, Double>> pedidoValor = new ArrayList<>();
+//
+//        ChartDto chartDTO = new ChartDto();
+//        List<DataSetDto> listaDataSet = new ArrayList<>();
+//
+//        //filtro de jogo
+//        if (tipoBusca.equals(0)) {
+//            List<Jogo> jogos = jogoRepository.findAll();
+//
+//            for (Jogo jogo : jogos) {
+//                DataSetDto dataSetDTO = new DataSetDto();
+//                List<Double> doubleList = new ArrayList<>();
+//                dataSetDTO.setLabel(jogo.getTitulo());
+//
+//
+//                for (List<Pedido> order : agrupadoPorData.values()) {
+//                    Integer amount = 0;
+//                    for (Pedido orderValueGroup : order) {
+//                        for (Item item : orderValueGroup.getItens()) {
+//                            if (item.getJogo().equals(jogo))
+//                                amount += item.getQuantidade();
+//                        }
+//                    }
+//                    doubleList.add(Double.parseDouble(String.valueOf(amount)));
+//                }
+//
+//                dataSetDTO.setData(doubleList);
+//                listaDataSet.add(dataSetDTO);
+//            }
+//        } else {//filtro de genero de jogo
+//            List<Genero> generos = generoRepository.findAll();
+//            for (Genero genero : generos) {
+//                DataSetDto dataSetDTO = new DataSetDto();
+//                List<Double> doubleList = new ArrayList<>();
+//                dataSetDTO.setLabel(genero.getNome());
+//
+//                for (List<Pedido> pedidos : agrupadoPorData.values()) {
+//                    Integer amount = 0;
+//                    Jogo jogo = null;
+//                    for (Pedido orderValueGroup : pedidos) {
+//                        for (Item item : orderValueGroup.getItens()) {
+//                            if (item.getJogo().getGeneros().contains(genero)) {
+//                                amount += item.getQuantidade();
+//                            }
+//                            jogo = item.getJogo();
+//                        }
+//                    }
+//
+//                    if (null != jogo)
+//                        doubleList.add(Double.parseDouble(String.valueOf(amount)));
+//                }
+//
+//                dataSetDTO.setData(doubleList);
+//                listaDataSet.add(dataSetDTO);
+//            }
+//        }
+//
+//        chartDTO.setLabel(agrupadoPorData.keySet().stream().map(lDate -> lDate.toString()).collect(Collectors.toList()));
+//        chartDTO.setDatasets(listaDataSet);
+//
+//        return chartDTO;
+        return null;
     }
 
     @Override
@@ -210,11 +209,11 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setStatus(statusRepository.findByStatus("EM PROCESSAMENTO"));
         pedido.setItens(pedido.getCliente().getCarrinho().getItens());
 
-        //TODO: ALTERAR PARAMETROS DE ONDE SOLICITA ID PARA LONG
+        // TODO: ALTERAR PARAMETROS DE ONDE SOLICITA ID PARA LONG
 //        pedido.getMetodosPagamento().forEach(p -> p.setCartaoCredito(cartaoRepository.findById(p.getCartaoCredito().getId()).get()));
         pedido.setTotal((pedido.getCliente().getCarrinho().getItens().stream().mapToDouble(i -> i.getJogo().getPreco() * i.getQuantidade().doubleValue()).sum()));
         if(pedido.getCupom() != null && pedido.getCupom().getId() != null){
-            //TODO: ALTERAR PARAMETROS DE ONDE SOLICITA ID PARA LONG
+            // TODO: ALTERAR PARAMETROS DE ONDE SOLICITA ID PARA LONG
 //            pedido.setCupom(cupomRepository.findById(pedido.getCupom().getId()).get());
 
             pedido.setTotal(BigDecimal.valueOf(pedido.getTotal() - pedido.getCupom().getValor())

@@ -12,12 +12,11 @@ public class DevolucaoController {
 
     //TODO: refatorar controller de devolucao para usar a fachada
 
-    private final DevolucaoFacade devolucaoService;
+//    private final DevolucaoFacade devolucaoService;
 
     private final ClienteFacade clienteService;
 
-    public DevolucaoController(DevolucaoFacade devolucaoService, ClienteFacade clienteService) {
-        this.devolucaoService = devolucaoService;
+    public DevolucaoController(ClienteFacade clienteService) {
         this.clienteService = clienteService;
     }
 //

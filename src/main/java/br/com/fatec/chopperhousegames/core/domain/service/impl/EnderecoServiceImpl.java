@@ -1,7 +1,7 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Endereco;
-import br.com.fatec.chopperhousegames.core.repository.EnderecoRepository;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.EnderecoRepository;
 import br.com.fatec.chopperhousegames.core.domain.service.EnderecoService;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.ClienteDTO;
 import org.springframework.beans.factory.annotation.Autowired;

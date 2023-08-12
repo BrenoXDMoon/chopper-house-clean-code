@@ -1,6 +1,7 @@
 package br.com.fatec.chopperhousegames.inbound.facade;
 
 
+import br.com.fatec.chopperhousegames.inbound.facade.dto.CadastroClienteCommand;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.ClienteDTO;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.SenhaDTO;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 public interface ClienteFacade extends Facade {
 
-    ClienteDTO salvar(ClienteDTO ent);
+    ClienteDTO salvar(CadastroClienteCommand ent);
 
     ClienteDTO editar(ClienteDTO ent);
 

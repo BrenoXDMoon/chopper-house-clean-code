@@ -1,6 +1,6 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
-import br.com.fatec.chopperhousegames.core.repository.EditoraRepository;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.EditoraRepository;
 import br.com.fatec.chopperhousegames.core.domain.entity.Editora;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

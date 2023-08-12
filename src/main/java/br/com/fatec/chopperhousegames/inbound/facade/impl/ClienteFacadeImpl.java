@@ -2,6 +2,7 @@ package br.com.fatec.chopperhousegames.inbound.facade.impl;
 
 import br.com.fatec.chopperhousegames.core.domain.service.ClienteService;
 import br.com.fatec.chopperhousegames.inbound.facade.ClienteFacade;
+import br.com.fatec.chopperhousegames.inbound.facade.dto.CadastroClienteCommand;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.ClienteDTO;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.SenhaDTO;
 import br.com.fatec.chopperhousegames.inbound.facade.mapper.ClienteMapper;
@@ -27,8 +28,8 @@ public class ClienteFacadeImpl implements ClienteFacade {
     }
 
     @Override
-    public ClienteDTO salvar(ClienteDTO dto) {
-        return mapper.toClienteDTO(service.salvar(mapper.toCliente(dto)));
+    public ClienteDTO salvar(CadastroClienteCommand command) {
+        return mapper.toClienteDTO(service.salvar(command));
     }
 
     @Override

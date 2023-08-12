@@ -2,10 +2,11 @@ package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Cliente;
 import br.com.fatec.chopperhousegames.core.domain.entity.Senha;
+import br.com.fatec.chopperhousegames.core.domain.entity.TipoCliente;
 import br.com.fatec.chopperhousegames.core.domain.service.ClienteService;
 import br.com.fatec.chopperhousegames.core.repository.ClienteRepository;
-import br.com.fatec.chopperhousegames.core.domain.service.TipoClienteService;
 
+import br.com.fatec.chopperhousegames.inbound.facade.dto.CadastroClienteCommand;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,20 +19,16 @@ public class ClienteServiceImpl implements ClienteService {
 
     ClienteRepository repository;
 
-    TipoClienteService tipoClienteService;
-
-    public ClienteServiceImpl(ClienteRepository repository, TipoClienteService tipoClienteService) {
+    public ClienteServiceImpl(ClienteRepository repository) {
         this.repository = repository;
-        this.tipoClienteService = tipoClienteService;
     }
 
     @Override
-    public Cliente salvar(Cliente cliente) {
-
-        cliente.setTipoCliente(tipoClienteService.buscarById(1));
-
+    public Cliente salvar(CadastroClienteCommand cadastroClienteCommand) {
+        Cliente cliente = new Cliente();
+        //TODO: converter cadastroClienteCommand para cliente
+        cliente.setTipoCliente(TipoCliente.CLIENTE);
         cliente.setRoles("CLIENTE");
-
         return repository.saveAndFlush(cliente);
     }
 
