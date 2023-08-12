@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/shared :: head('Painel Administrativo - ChopperHouse')}"></head>
+
+<body class="">
+<div class="wrapper ">
+    <div th:replace="~{layout/baseAdmin :: sidebar}"></div>
+    <div class="main-panel" id="main-panel">
+        <nav th:replace="~{layout/baseAdmin :: header}"></nav>
+        <div class="col-md-12">
+            <div class="card card-plain">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <th>#</th>
+                                <th>Nome</th>
+                                <th>Endereco</th>
+                                <th>Email</th>
+                                <th>Tipo de Cliente</th>
+                                <th colspan="2"></th>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cliente : ${clientes}">
+                                    <td th:text="${cliente.id}"></td>
+                                    <td th:text="${cliente.nomeCompleto}"></td>
+                                    <td th:if="${cliente.enderecos.isEmpty()}">Sem Endereços Cadastrados</td>
+                                    <td th:if="${!cliente.enderecos.isEmpty()}">
+                                        <span th:text="${cliente.enderecos.get(0).cidade}"></span>
+                                    </td>
+                                    <td th:text="${cliente.email}">andreia@gmail.com</td>
+                                    <td th:text="${cliente.tipoCliente.titulo}">The Sims</td>
+                                    <td class="m-auto" th:if="${cliente.ativo}">
+                                        <form th:object="${cliente}" th:action="@{clientes}" th:method="delete">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <input type="hidden" name="id" th:value="${cliente.id}">
+                                            <button class="btn btn-outline-danger">
+                                                <i class="fas fa-trash-alt"></i>
+                                                <span>Excluir</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td class="m-auto" th:unless="${cliente.ativo}">
+                                        <form th:object="${cliente}" th:action="@{clientes}" th:method="post">
+                                            <input type="hidden" name="id" th:value="${cliente.id}">
+                                            <button class="btn btn-outline-warning">
+                                                <i class="fas fa-trash-alt"></i>
+                                                <span>Ativar</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{layout/shared :: footer}"></footer>
+</body>
+
+</html>

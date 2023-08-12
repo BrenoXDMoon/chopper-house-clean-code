@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="~{layout/shared :: head(${'ChopperHouse Games'})}"></head>
+    <body>
+        <header th:replace="~{layout/baseCliente :: header}"></header>
+
+        <div class="container">
+            <div th:replace="~{layout/shared :: mensagem}"></div>
+            <div class="row justify-content-center">
+                <table class="table-responsive w-100 table d-block d-md-table table-hover mt-4 mb-4">
+                    <thead>
+                    <tr>
+                        <th scope="col">Nome do Jogo</th>
+                        <th scope="col">Plataforma</th>
+                        <th scope="col">Quantidade</th>
+                        <th colspan="2"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${!cliente.carrinho.itens.isEmpty()}" th:each="item : ${cliente.carrinho.itens}">
+                        <td th:text="${item.jogo.titulo}">Resident Evil 3</td>
+                        <td th:text="${item.jogo.plataforma.nome}">PS4</td>
+                        <td>
+                            <input class="form-control" type="number" min="1" step="1" th:value="${item.quantidade}" th:max="${item.jogo.quantidadeDisponivel}">
+                        </td>
+                        <td th:text="'R$ ' + ${item.jogo.preco}">R$ 350,00</td>
+                        <td class="m-auto">
+                            <form th:method="post" th:action="@{'/cliente/perfil/' + ${cliente.id} +'/checkout/removeItem'}">
+                                <input type="hidden" name="id" th:value="${item.id}">
+                                <button class="btn btn-outline-danger" type="submit">
+                                    <i class="fas fa-trash-alt"></i>
+                                    <span>Remover produto</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:unless="${!cliente.carrinho.itens.isEmpty()}" th:each="item : ${cliente.carrinho.itens}">
+                        <td>Carrinho vazio.</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <form th:method="POST" th:object="${pedido}" th:if="${cliente.carrinho.itens.size() != 0}">
+                    <div class="d-flex justify-content-between flex-wrap col-12">
+                        <div class="p-4 rounded bg-form col-12 col-md-6">
+                            <h5 class="text-center">Endereço de Entrega</h5>
+                            <hr />
+                            <div class="form-group">
+                                <label for="endereco_entrega_selector">Selecione um endereço</label>
+                                <select id="endereco_entrega_selector" class="form-control" th:field="*{endereco}" required>
+                                    <option value="">Escolha um endereço de entrega</option>
+                                    <th:block th:if="${!cliente.enderecos.isEmpty()}">
+                                        <option data-toggle="tooltip" data-placement="top"
+                                                th:each="endereco : ${cliente.enderecos}"
+                                                th:value="${endereco.id}"
+                                                th:text="${endereco.logradouro}"
+                                                th:title="${endereco.logradouro}">
+                                        </option>
+                                    </th:block>
+                                </select>
+                                <a class="btn btn-success" id="cria-endereco" th:href="@{'/cliente/perfil/' + ${cliente.id} +'/checkout/salvarEndereco'}">Cadastre um novo endereço</a>
+                            </div>
+
+                            <h5 class="text-center mt-5">Endereço de Cobrança</h5>
+                            <hr/>
+                            <div class="form-group">
+                                <label for="endereco_cobranca_selector">Selecione um endereço</label>
+                                <select id="endereco_cobranca_selector" class="form-control" th:field="*{enderecoCobranca}" required>
+                                    <option value="">Escolha um endereço de entrega</option>
+                                    <th:block th:if="${!cliente.enderecos.isEmpty()}">
+                                        <option data-toggle="tooltip" data-placement="top"
+                                                th:each="endereco : ${cliente.enderecos}"
+                                                th:value="${endereco.id}"
+                                                th:text="${endereco.logradouro}"
+                                                th:title="${endereco.logradouro}">
+                                        </option>
+                                    </th:block>
+                                </select>
+                                <a class="btn btn-success" th:href="@{'/cliente/perfil/' + ${cliente.id} +'/checkout/salvarEndereco'}">Cadastre um novo endereço</a>
+                            </div>
+                            <h5 class="text-center mt-5">Cartões</h5>
+                            <hr />
+                            <div id="payment_method_card">
+                                <div class="form-group">
+                                    <label>Selecione um cartão</label>
+                                    <select class="custom-select credit-card-selector" required
+                                            th:field="*{metodosPagamento[0].cartaoCredito.id}" onchange="changeCreditCardOption(event)">
+                                        <option value="">Selecione um cartão</option>
+                                        <th:block th:if="${!cliente.cartoes.isEmpty()}">
+                                            <option data-toggle="tooltip" data-placement="top"
+                                                    th:each="creditCard : ${cliente.cartoes}"
+                                                    th:value="${creditCard.id}"
+                                                    th:text="${creditCard.numeroCartao.substring(creditCard.numeroCartao.length() - 4)}"
+                                                    th:title="${creditCard.numeroCartao.substring(creditCard.numeroCartao.length() - 4)}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Digite o valor do pagamento:</label>
+                                    <input type="number" min="10" step="0.01" class="form-control credit-card-value"  placeholder="10.00" required
+                                           name="metodosPagamento[0].valorPagamento" onchange="validationValue(event)"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <a class="btn btn-outline-info btn-block" id="add_metodo_pagamento" name="add_metodo_pagamento">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span> Adicionar mais um método de pagamento</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded bg-form col-12 col-md-5 mt-5 mt-md-0">
+                            <div class="">
+                                <h5 class="text-center">Resumo do pedido</h5>
+                                <hr />
+                                <div class="d-flex flex-wrap justify-content-between">
+                                    <span>Total em produtos</span>
+                                    <span th:text="${'R$ ' + totalProdutos}"></span>
+                                </div>
+
+                                <div class="d-flex flex-wrap justify-content-between">
+                                    <span>Frete</span>
+                                    <span>R$ 15</span>
+                                </div>
+
+                                <div class="flex-wrap justify-content-between" id="cupom_div">
+                                    <span>Cupom de desconto disponíveis:</span>
+                                    <select id="cupom_select" class="custom-select" th:field="*{cupom.id}">
+                                        <option th:value="${cupomZerado.id}">Selecione um cupom</option>
+                                        <option class="form-check-input" th:each="cupom : ${cupons}"
+                                                th:value="${cupom.id}"
+                                                th:text="${'Código: ' + cupom.codigo + ' | Valor: ' + cupom.valor}"
+                                                th:title="${'Código: ' + cupom.codigo + ' | Valor: ' + cupom.valor}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="flex-wrap justify-content-between" id="cupom_troca_div">
+                                    <span>Cupom de troca disponíveis:</span>
+                                    <select class="custom-select" multiple id="cuponsTroca" name="cuponsTroca">
+                                        <option th:each="cupom : ${cuponsTroca}" th:if="${cupom.quantidade >= 1}"
+                                                th:value="${cupom.id}"
+                                                th:text="${'Código: ' + cupom.codigo + ' | Valor: ' + cupom.valor}"
+                                                th:title="${'Código: ' + cupom.codigo + ' | Valor: ' + cupom.valor}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <hr/>
+                                <div class="d-flex flex-wrap justify-content-between">
+                                    <h5 class="font-weight-bold">Total:</h5>
+                                    <div class="d-flex">
+                                        <span class="font-weight-bold mr-1">R$: </span>
+                                        <span class="font-weight-bold" id="total" th:text="${totalPedido}"></span>
+                                        <input type="hidden" th:field="*{total}" th:value="${totalPedido}">
+                                    </div>
+                                </div>
+                                <span class="text-center d-none" id="cupomAlert">
+                                  Valor do desconto não pode ser maior que o total
+                                </span>
+                                <button type="submit" class="btn btn-success" id="final_step"> Finalizar Compra </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <h1 class="text-black-50 text-center" th:if="${cliente.carrinho.itens.size() == 0}">Seu Carrinho está vazio</h1>
+            </div>
+        </div>
+
+        <footer th:insert="~{layout/shared :: footer}"></footer>
+    </body>
+    <script>
+        var total = document.getElementById("total");
+        var listPagamento = 0;
+
+        console.log("to aqui")
+        $(document).ready(function () {
+            $("#postalcode").mask("00000-000");
+        });
+
+        $("#add_metodo_pagamento").on("click", function (event) {
+            event.preventDefault();
+            let payment_dom = $("#payment_method_card");
+
+            $("#payment_method_card").clone().insertBefore(this);
+            payment_dom.removeAttr("id");
+            payment_dom.attr("id", "payment_method_card" + listPagamento);
+
+            for (let i = 0; i < $(".credit-card-selector").length; i++) {
+                let select_dom_credit_card = $(".credit-card-selector")[i];
+                let input_dom_credit_card_value = $(".credit-card-value")[i];
+
+                select_dom_credit_card.removeAttribute("name");
+                input_dom_credit_card_value.removeAttribute("name");
+
+                select_dom_credit_card.setAttribute(
+                    "name",
+                    "metodosPagamento[" + i + "].cartaoCredito.id"
+                );
+                input_dom_credit_card_value.setAttribute(
+                    "name",
+                    "metodosPagamento[" + i + "].valorPagamento"
+                );
+            }
+
+            listPagamento += 1;
+        });
+
+        let valorCupom = document.getElementById("cupom_select");
+    </script>
+</html>

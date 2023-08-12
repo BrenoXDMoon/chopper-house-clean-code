@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html>
+
+<html lang="pt">
+<head th:insert="~{layout/shared :: head('ChopperHouse - Perfil de Cliente')}">
+  <meta charset="UTF-8">
+  <title>ChopperHouse - Perfil de Cliente</title>
+</head>
+
+<body class="" onload="pag()">
+<header class="site-header py-1 header" th:replace="~{layout/baseCliente :: header}">
+
+</header>
+
+<section class="container-fluid perfil">
+  <div th:replace="~{layout/shared :: mensagem}"></div>
+  <div class="row">
+    <div class="col-12 text-center">
+      <div class="panel-header panel-header-sm text-white font-weight-bolder"><h3>Lista de Pedidos</h3></div>
+      <div class="card-header py-3 d-flex flex-wrap justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary" th:if="${cliente.id.equals(null)}">Cliente Novo</h6>
+        <h6 class="m-0 font-weight-bold text-primary" th:unless="${cliente.id.equals(null)}">
+          <a th:href="@{'/cliente/perfil/' + ${cliente.id}}" th:unless="${cliente.id.equals(null)}">Detalhes do Cliente</a>
+        </h6>
+        <h6 class="m-0 font-weight-bold text-primary">
+          <a th:href="@{'/cliente/perfil/' + ${cliente.id} + '/cartoes'}">Cartões</a>
+        </h6>
+        <h6 class="m-0 font-weight-bold text-primary " th:if="${null != cliente.id}">
+          <a th:href="@{'/cliente/perfil/' + ${cliente.id} + '/enderecos'}">Endereços</a>
+        </h6>
+        <h6 class="m-0 font-weight-bold text-primary" th:if="${null != cliente.id}">
+          <a th:href="@{'/cliente/perfil/' + ${cliente.id} + '/pedidos'}">Pedidos</a>
+        </h6>
+      </div>
+      <div class="card-body" th:if="${!cliente.pedidos.isEmpty()}">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+            <th>#</th>
+            <th>Data do Pedido</th>
+            <th>Status do Pedido</th>
+            <th colspan="2"></th>
+            </thead>
+            <tbody>
+            <tr th:each="pedido : ${cliente.pedidos}">
+              <td th:text="${pedido.id}">1</td>
+              <td th:text="${pedido.dataCriacao}">13/09/2021</td>
+              <td th:text="${pedido.status.status}"></td>
+              <td class="m-auto">
+                <a th:href="@{'/cliente/perfil/' + ${cliente.id} + '/pedidos/visualizar/'+${pedido.id}}" class="btn btn-outline-warning">
+                  <i class="fas fa-trash-alt"></i>
+                  <span>Visualizar</span>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-body" th:if="${cliente.pedidos.isEmpty()}">
+        <span>Sem Pedidos Registrados</span>
+      </div>
+    </div>
+  </div>
+</section>
+<footer th:replace="~{layout/shared :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/shared :: head('Painel Administrativo - ChopperHouse')}"></head>
+
+<body class="">
+<div class="wrapper ">
+    <div th:replace="~{layout/baseAdmin :: sidebar}"></div>
+    <div class="main-panel" id="main-panel">
+        <nav th:replace="~{layout/baseAdmin :: header}"></nav>
+        <form th:method="post" th:action="@{'/admin/pedidos/visualizar/'+ ${pedido.id}+'/editar'}">
+            <div class="col-md-12">
+                <div class="card card-plain">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div th:replace="~{layout/shared :: mensagem}"></div>
+                            <h2 class=' mb-5'>Detalhe do Pedido</h2>
+                            <div class="form-group">
+                                <h6 class="f-18 font-weight-bold">ID de Pedido:</h6>
+                                <label th:text="${pedido.id}">456</label>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="f-18 font-weight-bold">Logradouro de Entrega:</h6>
+                                <label th:text="${pedido.endereco.logradouro}">Rua General Osório</label>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="f-18 font-weight-bold">Total do Pedido:</h6>
+                                <label th:text="${pedido.total}">R$ 90.0</label>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="f-18 font-weight-bold">Status do Pedido:</h6>
+                                <label th:text="${pedido.status.status}">EM PROCESSAMENTO</label><br/>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="f-18 font-weight-bold">Data do Pedido:</h6>
+                                <label th:text="${pedido.dataCriacao}">13/09/2021</label><br/>
+                            </div>
+                            <div class="form-group">
+                                <h6>Produtos</h6>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Nome</th>
+                                            <th scope="col">Quantidade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="item : ${pedido.itens}">
+                                            <td th:text="${item.jogo.titulo}">Resident Evil 4</td>
+                                            <td th:text="${item.quantidade}">1</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <select class="form-control" th:name="statusId" th:id="statusId">
+                                <option th:each="status : ${statusPedidos}" th:text="${status.status}" th:value="${status.id}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-danger">Gravar Alteracoes</button>
+        </form>
+        <div class="container-fluid" th:if="${pedido.status.status.equals('CANCELAMENTO SOLICITADO')}">
+            <h4 class=' mb-5'>Cancelamento do pedido solicitado. Deseja aceitar?</h4>
+            <div class="row">
+                <form class="col-1" th:method="post" th:action="@{'/admin/pedidos/visualizar/'+ ${pedido.id}+'/aceitarCancelamento'}">
+                    <button type="submit" class="btn btn-success">Sim</button>
+                </form>
+                <form class="col-1" th:method="post" th:action="@{'/admin/pedidos/visualizar/'+ ${pedido.id}+'/recusarCancelamento'}">
+                    <button type="submit" class="btn btn-danger">Não</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{layout/shared :: footer}"></footer>
+</body>
+</html>
