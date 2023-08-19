@@ -3,10 +3,11 @@ package br.com.fatec.chopperhousegames.core.domain.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
-public class CartaoCredito extends EntidadeDominio {
+public class CartaoCredito extends EntidadeDominio implements Serializable {
 
     private String numeroCartao;
 

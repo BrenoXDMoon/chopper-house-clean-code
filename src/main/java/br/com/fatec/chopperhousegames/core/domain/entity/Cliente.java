@@ -3,23 +3,24 @@ package br.com.fatec.chopperhousegames.core.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cliente extends EntidadeDominio {
+public class Cliente extends EntidadeDominio implements Serializable {
 
     private String nomeCompleto;
 
     @Column(unique = true)
     private String email;
+
     private String dataNascimento;
 
-    @Embedded
-    private Senha senha;
+    private String senha;
+    
     private String cpf;
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -31,8 +32,6 @@ public class Cliente extends EntidadeDominio {
     private TipoCliente tipoCliente;
 
     private String telefone;
-
-    private String roles;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Carrinho carrinho;

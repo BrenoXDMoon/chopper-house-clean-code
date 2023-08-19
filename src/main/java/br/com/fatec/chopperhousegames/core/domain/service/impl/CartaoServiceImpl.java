@@ -1,9 +1,9 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
+import br.com.fatec.chopperhousegames.core.domain.DomainException;
 import br.com.fatec.chopperhousegames.core.domain.entity.CartaoCredito;
-import br.com.fatec.chopperhousegames.core.domain.service.ClienteService;
-import br.com.fatec.chopperhousegames.core.repository.CartaoCreditoRepository;
 import br.com.fatec.chopperhousegames.core.domain.service.CartaoService;
+import br.com.fatec.chopperhousegames.core.repository.CartaoCreditoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,38 +13,39 @@ public class CartaoServiceImpl implements CartaoService {
 
 
     private final CartaoCreditoRepository repository;
-    private final ClienteService clienteService;
 
-    public CartaoServiceImpl(CartaoCreditoRepository repository, ClienteService clienteService) {
+    public CartaoServiceImpl(CartaoCreditoRepository repository) {
         this.repository = repository;
-        this.clienteService = clienteService;
     }
 
     @Override
-    public CartaoCredito buscarPorId(Long id) {
-        return repository.findById(id).orElse(new CartaoCredito());
+    public CartaoCredito buscaCartaoPorId(Long id) {
+        return repository.findById(id).orElseThrow(DomainException::ch001RegistroNaoEncontrado);
     }
 
 
     @Override
-    public List<CartaoCredito> listar() {
+    public List<CartaoCredito> buscaTodosCartoes() {
         return repository.findAll();
     }
 
     @Override
-    public CartaoCredito salvar(CartaoCredito cartao) {
-        cartao.setCliente(clienteService.atualUsuarioLogado());
+    public CartaoCredito registraCartao(CartaoCredito cartao) {
+        //TODO: REFATORAR FLUXO PARA ATRIBUIR CLIENTE AO CARTÃO
+        //cartao.setCliente(clienteService.atualUsuarioLogado());
         return repository.save(cartao);
     }
 
     @Override
-    public void excluir(Long id) {
-        repository.delete(buscarPorId(id));
+    public Void removeCartao(Long id) {
+        repository.delete(buscaCartaoPorId(id));
+        return null;
     }
 
     @Override
-    public CartaoCredito editar(CartaoCredito cartao) {
-        cartao.setCliente(clienteService.atualUsuarioLogado());
+    public CartaoCredito alteraCartao(CartaoCredito cartao) {
+        //TODO: REFATORAR FLUXO PARA ATRIBUIR CLIENTE AO CARTÃO
+        //cartao.setCliente(clienteService.atualUsuarioLogado());
         return repository.save(cartao);
     }
 }

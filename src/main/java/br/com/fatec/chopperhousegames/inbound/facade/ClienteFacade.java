@@ -3,30 +3,25 @@ package br.com.fatec.chopperhousegames.inbound.facade;
 
 import br.com.fatec.chopperhousegames.inbound.facade.dto.CadastroClienteCommand;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.ClienteDTO;
-import br.com.fatec.chopperhousegames.inbound.facade.dto.SenhaDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ClienteFacade extends Facade {
 
-    ClienteDTO salvar(CadastroClienteCommand ent);
+    ClienteDTO registraCliente(CadastroClienteCommand cadastroClienteCommand);
 
-    ClienteDTO editar(ClienteDTO ent);
+    //TODO: alterar assinatura do método de ClienteDTO para EditarClienteCommand
+    ClienteDTO alteraDadosCliente(ClienteDTO clienteDTO);
 
-    ClienteDTO excluir(ClienteDTO ent);
+    void inativaCliente(Long id);
 
-    void ativaInativa(Long id);
+    void ativaCliente(Long id);
 
-    List<ClienteDTO> listar();
+    List<ClienteDTO> buscaTodos();
 
     ClienteDTO buscarPorId(Long id);
 
-    Optional<ClienteDTO> buscarPorEmail(String email);
+    Optional<ClienteDTO> buscaPorEmail(String email);
 
-    ClienteDTO atualUsuarioLogado();
-
-    Boolean usuarioEstaLogado(Long id);
-
-    ClienteDTO editarSenha(ClienteDTO clienteDTO, SenhaDTO dto);
 }

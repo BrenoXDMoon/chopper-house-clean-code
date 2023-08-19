@@ -13,15 +13,11 @@ public interface ClienteService {
 
     Cliente editar(Cliente cliente);
 
-    Cliente excluir(Cliente cliente);
+    void excluir(Long id);
 
     List<Cliente> listar();
 
     Optional<Cliente> buscarPorEmail(String email);
-
-    Cliente atualUsuarioLogado();
-
-    boolean usuarioEstaLogado(Long id);
 
     Cliente buscarPorId(Long id);
 

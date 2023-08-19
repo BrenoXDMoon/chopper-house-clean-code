@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Data
 public class EntidadeDominio {
-
+    //TODO: implementar tenant ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

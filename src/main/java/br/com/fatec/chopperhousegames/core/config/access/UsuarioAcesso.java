@@ -1,7 +1,6 @@
 package br.com.fatec.chopperhousegames.core.config.access;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Cliente;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,16 +11,14 @@ import java.util.List;
 
 public class UsuarioAcesso implements UserDetails {
 
-    @Autowired
-    Cliente cliente;
+    private final Cliente cliente;
 
-    private List<GrantedAuthority> authorities;
+    private final List<GrantedAuthority> authorities;
 
     public UsuarioAcesso(Cliente cliente) {
-
         this.cliente = cliente;
-        this.authorities = new ArrayList<GrantedAuthority>();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(cliente.getRoles());
+        this.authorities = new ArrayList<>();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(cliente.getTipoCliente().getRole());
         this.authorities.add(authority);
     }
 
@@ -32,7 +29,7 @@ public class UsuarioAcesso implements UserDetails {
 
     @Override
     public String getPassword() {
-        return cliente.getSenha().getSenha();
+        return cliente.getSenha();
     }
 
     @Override

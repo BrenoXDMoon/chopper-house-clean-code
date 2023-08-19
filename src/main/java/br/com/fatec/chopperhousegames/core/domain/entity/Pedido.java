@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Pedido extends EntidadeDominio {
+public class Pedido extends EntidadeDominio implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date dataEntrega;
@@ -23,6 +24,7 @@ public class Pedido extends EntidadeDominio {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+    //TODO: Alterar campos de status para um Enum
     @ManyToOne
     @JoinColumn(name = "status_id")
     private Status status;
