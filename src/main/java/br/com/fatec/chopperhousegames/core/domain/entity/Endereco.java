@@ -5,10 +5,11 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Entity
 @Data
-public class Endereco extends EntidadeDominio{
+public class Endereco extends EntidadeDominio implements Serializable{
 
     @NotBlank(message = "Logradouro não pode estar em branco")
     @NotNull

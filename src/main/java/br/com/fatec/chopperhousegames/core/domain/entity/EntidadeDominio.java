@@ -1,24 +1,26 @@
 package br.com.fatec.chopperhousegames.core.domain.entity;
 
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Data
 public class EntidadeDominio {
-
+    //TODO: implementar tenant ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    private Date dataCriacao;
+    //TODO: para atribuir os campos dataCriacao e dataAlteracao, criar um org.hibernate.annotations.Filter
+    private LocalDateTime dataCriacao;
 
-    public EntidadeDominio(){
-        this.dataCriacao = new Date();
-    }
+    private LocalDateTime dataAlteracao;
+
+    private boolean ativo;
+
 }

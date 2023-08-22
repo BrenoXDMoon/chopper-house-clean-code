@@ -1,7 +1,7 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Genero;
-import br.com.fatec.chopperhousegames.core.repository.GeneroRepository;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.GeneroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

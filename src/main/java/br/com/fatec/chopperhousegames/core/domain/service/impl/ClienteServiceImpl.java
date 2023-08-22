@@ -2,12 +2,10 @@ package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Cliente;
 import br.com.fatec.chopperhousegames.core.domain.entity.Senha;
+import br.com.fatec.chopperhousegames.core.domain.entity.TipoCliente;
 import br.com.fatec.chopperhousegames.core.domain.service.ClienteService;
 import br.com.fatec.chopperhousegames.core.repository.ClienteRepository;
-import br.com.fatec.chopperhousegames.core.domain.service.TipoClienteService;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import br.com.fatec.chopperhousegames.inbound.facade.dto.CadastroClienteCommand;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,20 +16,14 @@ public class ClienteServiceImpl implements ClienteService {
 
     ClienteRepository repository;
 
-    TipoClienteService tipoClienteService;
-
-    public ClienteServiceImpl(ClienteRepository repository, TipoClienteService tipoClienteService) {
+    public ClienteServiceImpl(ClienteRepository repository) {
         this.repository = repository;
-        this.tipoClienteService = tipoClienteService;
     }
 
     @Override
-    public Cliente salvar(Cliente cliente) {
-
-        cliente.setTipoCliente(tipoClienteService.buscarById(1));
-
-        cliente.setRoles("CLIENTE");
-
+    public Cliente salvar(CadastroClienteCommand cadastroClienteCommand) {
+        Cliente cliente = new Cliente();
+        cliente.setTipoCliente(TipoCliente.CLIENTE);
         return repository.saveAndFlush(cliente);
     }
 
@@ -41,9 +33,8 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente excluir(Cliente cliente) {
-        cliente.setAtivo(false);
-        return editar(cliente);
+    public void excluir(Long id) {
+        repository.inativaClientePorId(id);
     }
 
     @Override
@@ -58,33 +49,14 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente atualUsuarioLogado() {
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email;
-
-        if (principal != null) {
-            if (principal instanceof UserDetails) {
-                email = ((UserDetails) principal).getUsername();
-                return this.buscarPorEmail(email).orElse(new Cliente());
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean usuarioEstaLogado(Long id) {
-        return this.atualUsuarioLogado().getId().equals(id);
-    }
-
-    @Override
     public Cliente buscarPorId(Long id) {
         return repository.findById(id).orElse(new Cliente());
     }
 
     @Override
     public Cliente editarSenha(Cliente cliente, Senha senha) {
-        cliente.setSenha(senha);
+        //TODO: mover para este método a validação de senha
+        cliente.setSenha(senha.getSenha());
         return editar(cliente);
     }
 

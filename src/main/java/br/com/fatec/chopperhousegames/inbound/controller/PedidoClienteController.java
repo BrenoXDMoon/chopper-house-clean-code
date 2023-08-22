@@ -2,7 +2,6 @@ package br.com.fatec.chopperhousegames.inbound.controller;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Cliente;
 import br.com.fatec.chopperhousegames.core.domain.entity.Pedido;
-import br.com.fatec.chopperhousegames.core.domain.service.ClienteService;
 import br.com.fatec.chopperhousegames.core.domain.service.PedidoService;
 import br.com.fatec.chopperhousegames.core.domain.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +18,11 @@ public class PedidoClienteController {
 
     private final StatusService statusService;
 
-    private final ClienteService clienteService;
-
     private final PedidoService pedidoService;
 
     @Autowired
-    public PedidoClienteController(StatusService statusService, ClienteService clienteService, PedidoService pedidoService) {
+    public PedidoClienteController(StatusService statusService, PedidoService pedidoService) {
         this.statusService = statusService;
-        this.clienteService = clienteService;
         this.pedidoService = pedidoService;
     }
 
@@ -49,8 +45,6 @@ public class PedidoClienteController {
         pedidoService.editar(pedido);
 
         mv.addObject("mensagem", "Solicitação de cancelamento enviada com sucesso!");
-
-        mv.addObject("cliente", clienteService.atualUsuarioLogado());
 
         return mv;
     }

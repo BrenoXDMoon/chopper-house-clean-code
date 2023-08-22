@@ -1,16 +1,19 @@
 package br.com.fatec.chopperhousegames.inbound.facade;
 
-import br.com.fatec.chopperhousegames.inbound.facade.dto.ClienteDTO;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.EnderecoDTO;
+
+import java.util.List;
 
 public interface EnderecoFacade {
     
     
-    EnderecoDTO salvar(ClienteDTO cliente, EnderecoDTO enderecoDto);
+    EnderecoDTO registraEndereco(EnderecoDTO enderecoDto);
 
-    void excluir(Long id);
+    Void removeEndereco(Long id);
 
-    EnderecoDTO buscarPorId(Long id);
+    EnderecoDTO buscaEnderecoPorId(Long id);
 
-    EnderecoDTO editar(ClienteDTO atualUsuarioLogado, EnderecoDTO enderecoForm);
+    EnderecoDTO alteraDadosEndereco(EnderecoDTO enderecoForm);
+
+    List<EnderecoDTO> buscaTodosEnderecos();
 }

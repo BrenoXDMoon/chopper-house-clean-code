@@ -5,11 +5,12 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Data
-public class Cupom extends EntidadeDominio {
+public class Cupom extends EntidadeDominio implements Serializable {
 
     private String codigo;
 

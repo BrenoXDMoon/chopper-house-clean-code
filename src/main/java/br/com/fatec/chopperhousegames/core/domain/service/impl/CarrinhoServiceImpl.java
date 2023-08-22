@@ -6,7 +6,7 @@ import br.com.fatec.chopperhousegames.core.domain.entity.Item;
 import br.com.fatec.chopperhousegames.core.domain.entity.Jogo;
 import br.com.fatec.chopperhousegames.core.domain.service.ClienteService;
 import br.com.fatec.chopperhousegames.core.repository.ClienteRepository;
-import br.com.fatec.chopperhousegames.core.repository.JogoRepository;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.JogoRepository;
 import br.com.fatec.chopperhousegames.core.domain.service.CarrinhoService;
 import org.springframework.stereotype.Service;
 

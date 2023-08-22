@@ -1,17 +1,14 @@
 package br.com.fatec.chopperhousegames.core.domain.entity;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.List;
+@AllArgsConstructor
+public enum TipoCliente {
+    CLIENTE("CLIENTE"), ADMINISTRADOR("ADMIN");
 
-@Entity
-@Data
-public class TipoCliente extends EntidadeDominio{
+    private final String role;
 
-    private String titulo;
-    private String descricao;
-    @OneToMany(targetEntity = Cliente.class)
-    private List<Cliente> clientes;
+    public String getRole() {
+        return role;
+    }
 }

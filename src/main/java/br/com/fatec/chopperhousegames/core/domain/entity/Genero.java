@@ -4,11 +4,12 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Data
-public class Genero extends EntidadeDominio{
+public class Genero extends EntidadeDominio implements Serializable {
     private String nome;
 
     @ManyToMany

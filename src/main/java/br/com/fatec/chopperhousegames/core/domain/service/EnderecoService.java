@@ -1,14 +1,17 @@
 package br.com.fatec.chopperhousegames.core.domain.service;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Endereco;
-import br.com.fatec.chopperhousegames.inbound.facade.dto.ClienteDTO;
+
+import java.util.List;
 
 public interface EnderecoService {
 
-    Endereco buscarPorId(Long id);
-    Endereco salvar(Endereco end);
+    Endereco buscaEnderecoPorId(Long id);
+    Endereco registraEndereco(Endereco end);
 
-    void excluir(Long id);
+    void removeEndereco(Long id);
 
-    Endereco editar(ClienteDTO atualUsuarioLogado, Endereco enderecoForm);
+    Endereco alteraEndereco(Endereco enderecoForm);
+
+    List<Endereco> buscarTodosEnderecos();
 }

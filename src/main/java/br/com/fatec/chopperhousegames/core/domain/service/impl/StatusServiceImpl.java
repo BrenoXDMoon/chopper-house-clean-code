@@ -1,7 +1,7 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Status;
-import br.com.fatec.chopperhousegames.core.repository.StatusRepository;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.StatusRepository;
 import br.com.fatec.chopperhousegames.core.domain.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

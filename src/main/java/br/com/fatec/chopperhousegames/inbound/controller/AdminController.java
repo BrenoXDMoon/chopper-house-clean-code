@@ -73,7 +73,7 @@ public class AdminController {
     public ModelAndView listaClientes(){
         ModelAndView mv = new ModelAndView("admin/cliente/lista");
 
-        mv.addObject("clientes", facade.listar());
+        mv.addObject("clientes", facade.buscaTodos());
 
         return mv;
     }
@@ -82,8 +82,8 @@ public class AdminController {
     public ModelAndView desativaEAtivaCliente(@RequestParam Long id, RedirectAttributes attributes){
 
         ModelAndView mv = new ModelAndView("admin/cliente/lista");
-        facade.ativaInativa(id);
-        mv.addObject("clientes", facade.listar());
+        facade.ativaCliente(id);
+        mv.addObject("clientes", facade.buscaTodos());
         attributes.addFlashAttribute("mensagem", "Usuário excluído com sucesso!");
 
         return mv;

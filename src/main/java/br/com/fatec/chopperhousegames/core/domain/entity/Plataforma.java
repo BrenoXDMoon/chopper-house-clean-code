@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -11,7 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Plataforma extends EntidadeDominio{
+public class Plataforma extends EntidadeDominio implements Serializable {
     private String nome;
 
     @OneToMany(mappedBy = "plataforma", targetEntity = Jogo.class)

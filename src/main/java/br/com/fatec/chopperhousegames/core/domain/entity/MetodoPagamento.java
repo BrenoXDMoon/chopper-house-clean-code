@@ -3,10 +3,11 @@ package br.com.fatec.chopperhousegames.core.domain.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
-public class MetodoPagamento extends EntidadeDominio{
+public class MetodoPagamento extends EntidadeDominio implements Serializable {
     private Double valorPagamento;
 
     @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
