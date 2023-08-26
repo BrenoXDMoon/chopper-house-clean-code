@@ -1,17 +1,22 @@
 package br.com.fatec.chopperhousegames.core.domain.entity;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import java.io.Serializable;
-import java.util.List;
 
-@Entity
-@Data
-public class Idioma extends EntidadeDominio implements Serializable {
+@Getter
+@AllArgsConstructor
+public enum Idioma implements Serializable {
+
+    INGLES("ENG"),
+    PORTUGUES("PT-BR"),
+    ESPANHOL("ESP"),
+    JAPONES("JP"),
+    FRANCES("FRA"),
+    MANDARIM("CHI"),
+    ITALIANO("ITA"),
+    RUSSO("RUS");
+
     private String nome;
-
-    @ManyToMany
-    private List<Jogo> jogos;
 }

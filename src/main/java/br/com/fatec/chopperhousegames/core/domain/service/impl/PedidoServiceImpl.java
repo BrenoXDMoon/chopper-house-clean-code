@@ -1,15 +1,20 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
-import br.com.fatec.chopperhousegames.core.domain.entity.*;
-import br.com.fatec.chopperhousegames.core.repository.*;
+import br.com.fatec.chopperhousegames.core.domain.entity.Cupom;
+import br.com.fatec.chopperhousegames.core.domain.entity.Pedido;
+import br.com.fatec.chopperhousegames.core.domain.entity.Status;
+import br.com.fatec.chopperhousegames.core.domain.entity.TipoCupom;
 import br.com.fatec.chopperhousegames.core.domain.service.PedidoService;
+import br.com.fatec.chopperhousegames.core.repository.CartaoCreditoRepository;
+import br.com.fatec.chopperhousegames.core.repository.ClienteRepository;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.ChartDto;
 import br.com.fatec.chopperhousegames.inbound.facade.dto.GraficoDto;
-import br.com.fatec.chopperhousegames.outbound.repository.jpa.*;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.CupomRepository;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.JogoRepository;
+import br.com.fatec.chopperhousegames.outbound.repository.jpa.PedidoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -17,9 +22,9 @@ import java.util.*;
 @Service
 public class PedidoServiceImpl implements PedidoService {
 
-    private final PedidoRepository repository;
+    //TODO: refatorar essa classe completamente
 
-    private final StatusRepository statusRepository;
+    private final PedidoRepository repository;
 
     private final CartaoCreditoRepository cartaoRepository;
 
@@ -29,18 +34,12 @@ public class PedidoServiceImpl implements PedidoService {
 
     private final JogoRepository jogoRepository;
 
-    private final GeneroRepository generoRepository;
-    private final TipoCupomRepository tipoCupomRepository;
-
-    public PedidoServiceImpl(PedidoRepository repository, StatusRepository statusRepository, CartaoCreditoRepository cartaoRepository, ClienteRepository clienteRepository, CupomRepository cupomRepository, JogoRepository jogoRepository, GeneroRepository generoRepository, TipoCupomRepository tipoCupomRepository) {
+    public PedidoServiceImpl(PedidoRepository repository, CartaoCreditoRepository cartaoRepository, ClienteRepository clienteRepository, CupomRepository cupomRepository, JogoRepository jogoRepository) {
         this.repository = repository;
-        this.statusRepository = statusRepository;
         this.cartaoRepository = cartaoRepository;
         this.clienteRepository = clienteRepository;
         this.cupomRepository = cupomRepository;
         this.jogoRepository = jogoRepository;
-        this.generoRepository = generoRepository;
-        this.tipoCupomRepository = tipoCupomRepository;
     }
 
 
@@ -50,13 +49,11 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public Pedido salvar(Pedido pedido, BindingResult result) {
-        pedido = preencherPedido(pedido, result);
-        if(result.hasErrors()){
-            return pedido;
-        }
+    @Transactional
+    public Pedido salvar(Pedido pedido) {
+        preencherPedido(pedido);
 
-        pedido = repository.saveAndFlush(pedido);
+        repository.saveAndFlush(pedido);
 
         pedido.getCliente().getCarrinho().getItens().clear();
 
@@ -81,7 +78,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public List<Pedido> buscarByStatus(String status) {
-        return repository.findAllByStatus_Status(status);
+        return repository.findAllByStatus_Status(Status.getByNomeStatus(status));
     }
 
     @Override
@@ -204,9 +201,9 @@ public class PedidoServiceImpl implements PedidoService {
         return cards;
     }
 
-    private Pedido preencherPedido(Pedido pedido, BindingResult result) {
+    private void preencherPedido(Pedido pedido) {
 
-        pedido.setStatus(statusRepository.findByStatus("EM PROCESSAMENTO"));
+        pedido.setStatus(Status.EM_PROCESSAMENTO);
         pedido.setItens(pedido.getCliente().getCarrinho().getItens());
 
         // TODO: ALTERAR PARAMETROS DE ONDE SOLICITA ID PARA LONG
@@ -235,9 +232,8 @@ public class PedidoServiceImpl implements PedidoService {
 
         pedido.setTotal(pag);
 
-        if(!total.equals(pedido.getTotal())){
-            result.addError(new ObjectError("pedido", "Valor total e do pagamento são diferentes: TOTAL PAGAMENTO:" +   total + " TOTAL PEDIDO: " + pedido.getTotal()));
-            return pedido;
+        if(!total.equals(pedido.getTotal())) {
+            //TODO: adicionar Exception
         }
 
         if(!pedido.getCuponsTroca().isEmpty()){
@@ -256,7 +252,7 @@ public class PedidoServiceImpl implements PedidoService {
                 cupom.setCodigo(codigo);
                 cupom.setQuantidade(1);
                 cupom.setCliente(pedido.getCliente());
-                cupom.setTipoCupom(tipoCupomRepository.findByNome("TROCA"));
+                cupom.setTipoCupom(TipoCupom.TROCA);
                 cupom.setValor(totalCupom - pedido.getTotal());
             }
         }
@@ -265,7 +261,7 @@ public class PedidoServiceImpl implements PedidoService {
 
         //diminuindo a quantidade do cupom de desconto quando usado
         if(pedido.getCupom() != null && pedido.getCupom().getId() != null){
-            if(!pedido.getCupom().getTipoCupom().getNome().equals("ZERADO")){
+        if(!pedido.getCupom().getTipoCupom().getNome().equals("ZERADO")){
                 pedido.getCupom().setQuantidade(pedido.getCupom().getQuantidade() - 1);
             }
         }
@@ -277,13 +273,5 @@ public class PedidoServiceImpl implements PedidoService {
 
         //TODO: ALTERAR PARAMETROS DE ONDE SOLICITA ID PARA LONG
         //pedido.setId(geraIdNovo(pedido));
-
-        return pedido;
-    }
-
-    private Integer geraIdNovo(Pedido pedido) {
-        Integer id = null;
-        id = repository.findAll().size() + 1;
-        return id;
     }
 }

@@ -24,9 +24,7 @@ public class Pedido extends EntidadeDominio implements Serializable {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    //TODO: Alterar campos de status para um Enum
-    @ManyToOne
-    @JoinColumn(name = "status_id")
+    @Enumerated(EnumType.ORDINAL)
     private Status status;
 
     @ManyToOne
@@ -37,13 +35,13 @@ public class Pedido extends EntidadeDominio implements Serializable {
     @JoinColumn(name = "endereco_cobranca_id")
     private Endereco enderecoCobranca;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany
     private List<MetodoPagamento> metodosPagamento;
 
     @ManyToOne(cascade = {CascadeType.ALL})
     private Cupom cupom;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @ManyToMany
     private List<Cupom> cuponsTroca;
 
     @ManyToMany

@@ -1,4 +1,4 @@
-package br.com.fatec.chopperhousegames.core.domain;
+package br.com.fatec.chopperhousegames.core.domain.exception;
 
 public class DomainException extends RuntimeException {
 
@@ -9,8 +9,12 @@ public class DomainException extends RuntimeException {
         this.codigo = codigo;
     }
 
-    public static DomainException ch001RegistroNaoEncontrado(){
+    public static DomainException ch001RegistroNaoEncontrado() {
         return new DomainException("CH-001", "Registro não foi encontrado.");
+    }
+
+    public static DomainException ch002StatusNaoEncontrado() {
+        return new DomainException("CH-002", "Status não foi encontrado.");
     }
 
     public String getCodigo() {

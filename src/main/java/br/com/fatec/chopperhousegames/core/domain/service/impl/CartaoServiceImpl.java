@@ -1,6 +1,6 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
-import br.com.fatec.chopperhousegames.core.domain.DomainException;
+import br.com.fatec.chopperhousegames.core.domain.exception.DomainException;
 import br.com.fatec.chopperhousegames.core.domain.entity.CartaoCredito;
 import br.com.fatec.chopperhousegames.core.domain.service.CartaoService;
 import br.com.fatec.chopperhousegames.core.repository.CartaoCreditoRepository;
