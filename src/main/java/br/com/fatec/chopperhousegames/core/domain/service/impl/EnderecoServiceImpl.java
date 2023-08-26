@@ -1,6 +1,6 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
-import br.com.fatec.chopperhousegames.core.domain.DomainException;
+import br.com.fatec.chopperhousegames.core.domain.exception.DomainException;
 import br.com.fatec.chopperhousegames.core.domain.entity.Endereco;
 import br.com.fatec.chopperhousegames.core.domain.service.EnderecoService;
 import br.com.fatec.chopperhousegames.outbound.repository.jpa.EnderecoRepository;

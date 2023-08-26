@@ -1,6 +1,7 @@
 package br.com.fatec.chopperhousegames.core.domain.service.impl;
 
 import br.com.fatec.chopperhousegames.core.domain.entity.Cupom;
+import br.com.fatec.chopperhousegames.core.domain.entity.TipoCupom;
 import br.com.fatec.chopperhousegames.outbound.repository.jpa.CupomRepository;
 import br.com.fatec.chopperhousegames.core.domain.service.CupomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +16,12 @@ public class CupomServiceImpl implements CupomService {
     private CupomRepository repository;
 
     @Override
-    public List<Cupom> listarTodos() {
+    public List<Cupom> listarTodosCupons() {
         return repository.findAll();
     }
 
     @Override
-    public List<Cupom> listarCupomDesconto() {
-        return repository.findAllByTipoCupom_NomeAndQuantidadeIsGreaterThan("DESCONTO", 0);
-    }
-
-    @Override
-    public List<Cupom> listarCupomTroca() {
-        return repository.findAllByTipoCupom_NomeAndQuantidadeIsGreaterThan("TROCA", 0);
-    }
-
-    @Override
-    public Cupom buscarCupomZerado() {
-        return repository.findAllByTipoCupom_Nome("ZERADO");
+    public List<Cupom> buscarCuponsPorTipo(TipoCupom tipoCupom) {
+        return repository.buscaTodosCuponsDoTipoEQuantidadeMaiorQueZero(tipoCupom);
     }
 }

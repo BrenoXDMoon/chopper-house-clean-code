@@ -1,13 +1,17 @@
 package br.com.fatec.chopperhousegames.core.domain.entity;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
 
-@Table(name = "tipo_cupom")
-@Entity
-@Data
-public class TipoCupom extends EntidadeDominio{
-    private String nome;
+@Getter
+@AllArgsConstructor
+public enum TipoCupom implements Serializable {
+
+    DESCONTO("DESCONTO"),
+    TROCA("TROCA"),
+    ZERADO("ZERADO");
+
+    private final String nome;
 }

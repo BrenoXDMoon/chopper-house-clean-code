@@ -1,20 +1,20 @@
 package br.com.fatec.chopperhousegames.core.domain.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import java.io.Serializable;
-import java.util.List;
 
-@Entity
-@Setter
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Plataforma extends EntidadeDominio implements Serializable {
+public enum Plataforma implements Serializable {
+
+    PS4("PlayStation 4"),
+    NINTENDO_SWITCH("Nintendo Switch"),
+    PC("PC"),
+    XBOX_ONE("XBox One"),
+    PS3("PlayStation 3"),
+    XBOX_360("XBox 360"),
+    WII("Nintendo Wii");
+
     private String nome;
 
-    @OneToMany(mappedBy = "plataforma", targetEntity = Jogo.class)
-    private List<Jogo> jogo;
 }

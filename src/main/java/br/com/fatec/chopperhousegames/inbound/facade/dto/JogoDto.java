@@ -7,10 +7,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 @Data
 public class JogoDto {
+
+    //TODO: Reavaliar a necessidade de uso deste DTO
 
     @NotEmpty(message = "O Jogo deve conter um título")
     private String titulo;
@@ -23,10 +24,12 @@ public class JogoDto {
     private String sinopse;
     @NotEmpty(message = "O Jogo deve conter ao menos uma imagem")
     private String imagem;
+
+    //TODO: mudar o tipo de dataLancamento para LocalDateTime
     private String dataLancamento;
     private Plataforma plataforma;
-    private List<Idioma> idiomas;
-    private List<Genero> generos;
+    private Idioma idiomas;
+    private Genero generos;
     private Editora editora;
     @Min(value = 0, message = "O jogo deve ter quantidade mínima de 0")
     private Integer quantidade;
@@ -34,6 +37,7 @@ public class JogoDto {
     private String motivoInativacao;
     private boolean ativo;
 
+    //TODO: Substituir esse método por um mapper
     public Jogo toJogo() {
         Jogo jogo = new Jogo();
         jogo.setTitulo(this.titulo);

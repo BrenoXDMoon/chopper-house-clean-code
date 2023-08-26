@@ -1,17 +1,24 @@
 package br.com.fatec.chopperhousegames.core.domain.entity;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import java.io.Serializable;
-import java.util.List;
 
-@Entity
-@Data
-public class Genero extends EntidadeDominio implements Serializable {
+@Getter
+@AllArgsConstructor
+public enum Genero implements Serializable {
+
+    AVENTURA("Aventura"),
+    FPS("FPS"),
+    CORRIDA("Corrida"),
+    PUZZLE("Puzzle"),
+    HORROR("Horror"),
+    TERROR("Terror"),
+    SIMULADOR("Simulador"),
+    VISUAL_NOVEL("Visual Novel"),
+    LUTA("Luta");
+
     private String nome;
 
-    @ManyToMany
-    private List<Jogo> jogos;
 }
